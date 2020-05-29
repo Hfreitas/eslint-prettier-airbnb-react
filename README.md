@@ -102,6 +102,10 @@ Once files are created, you may edit to your liking.
 
 ---
 
+This is a version of original script for personal use. If the original version isn't yet compatible with create-react-app,you're welcome to use my little modification.
+
+Please, visit the original [repo](https://github.com/paulolramos/eslint-prettier-airbnb-react) and thank the author.
+
 This script was inspired by Jeffrey Zhen's [tutorial](https://blog.echobind.com/integrating-prettier-eslint-airbnb-style-guide-in-vscode-47f07b5d7d6a).
 
 P.S.: This is an adjustment for restore compability with create-react-app.
