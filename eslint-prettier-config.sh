@@ -124,7 +124,9 @@ else
   "extends": [
     "airbnb",
     "plugin:prettier/recommended",
-    "prettier/react"
+    "prettier/react",
+    "react-app",
+    "react-app/jest"
   ],
   "env": {
     "browser": true,
