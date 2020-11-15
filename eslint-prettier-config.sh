@@ -18,9 +18,15 @@ echo
 echo "Which package manager are you using?"
 select package_command_choices in "Yarn" "npm" "Cancel"; do
   case $package_command_choices in
-    Yarn ) pkg_cmd='yarn add'; break;;
-    npm ) pkg_cmd='npm install'; break;;
-    Cancel ) exit;;
+  Yarn)
+    pkg_cmd='yarn add'
+    break
+    ;;
+  npm)
+    pkg_cmd='npm install'
+    break
+    ;;
+  Cancel) exit ;;
   esac
 done
 echo
@@ -29,21 +35,27 @@ echo
 echo "Which ESLint and Prettier configuration format do you prefer?"
 select config_extension in ".js" ".json" "Cancel"; do
   case $config_extension in
-    .js ) config_opening='module.exports = {'; break;;
-    .json ) config_opening='{'; break;;
-    Cancel ) exit;;
+  .js)
+    config_opening='module.exports = {'
+    break
+    ;;
+  .json)
+    config_opening='{'
+    break
+    ;;
+  Cancel) exit ;;
   esac
 done
 echo
 
 # Checks for existing eslintrc files
-if [ -f ".eslintrc.js" -o -f ".eslintrc.yaml" -o -f ".eslintrc.yml" -o -f ".eslintrc.json" -o -f ".eslintrc" ]; then
+if [ -f ".eslintrc.js" ] || [ -f ".eslintrc.yaml" ] || [ -f ".eslintrc.yml" ] || [ -f ".eslintrc.json" ] || [ -f ".eslintrc" ]; then
   echo -e "${RED}Existing ESLint config file(s) found:${NC}"
-  ls -a .eslint* | xargs -n 1 basename
+  find . -maxdepth 1 -name ".eslint" -print0 | xargs -n 1 basename
   echo
   echo -e "${RED}CAUTION:${NC} there is loading priority when more than one config file is present: https://eslint.org/docs/user-guide/configuring#configuration-file-formats"
   echo
-  read -p  "Write .eslintrc${config_extension} (Y/n)? "
+  read -rp "Write .eslintrc${config_extension} (Y/n)? "
   if [[ $REPLY =~ ^[Nn]$ ]]; then
     echo -e "${YELLOW}>>>>> Skipping ESLint config${NC}"
     skip_eslint_setup="true"
@@ -53,7 +65,7 @@ finished=false
 
 # Max Line Length Prompt
 while ! $finished; do
-  read -p "What max line length do you want to set for ESLint and Prettier? (Recommendation: 80)"
+  read -rp "What max line length do you want to set for ESLint and Prettier? (Recommendation: 80)"
   if [[ $REPLY =~ ^[0-9]{2,3}$ ]]; then
     max_len_val=$REPLY
     finished=true
@@ -68,21 +80,21 @@ echo "What style of trailing commas do you want to enforce with Prettier?"
 echo -e "${YELLOW}>>>>> See https://prettier.io/docs/en/options.html#trailing-commas for more details.${NC}"
 select trailing_comma_pref in "none" "es5" "all"; do
   case $trailing_comma_pref in
-    none ) break;;
-    es5 ) break;;
-    all ) break;;
+  none) break ;;
+  es5) break ;;
+  all) break ;;
   esac
 done
 echo
 
 # Checks for existing prettierrc files
-if [ -f ".prettierrc.js" -o -f "prettier.config.js" -o -f ".prettierrc.yaml" -o -f ".prettierrc.yml" -o -f ".prettierrc.json" -o -f ".prettierrc.toml" -o -f ".prettierrc" ]; then
+if [ -f ".prettierrc.js" ] || [ -f "prettier.config.js" ] || [ -f ".prettierrc.yaml" ] || [ -f ".prettierrc.yml" ] ||  [ -f ".prettierrc.json" ] || [ -f ".prettierrc.toml" ] ||  [ -f ".prettierrc" ]; then
   echo -e "${RED}Existing Prettier config file(s) found${NC}"
-  ls -a | grep "prettier*" | xargs -n 1 basename
+  find . -maxdepth 1 -name "*prettier*" -print0 | xargs -n 1 basename
   echo
   echo -e "${RED}CAUTION:${NC} The configuration file will be resolved starting from the location of the file being formatted, and searching up the file tree until a config file is (or isn't) found. https://prettier.io/docs/en/configuration.html"
   echo
-  read -p  "Write .prettierrc${config_extension} (Y/n)? "
+  read -rp "Write .prettierrc${config_extension} (Y/n)? "
   if [[ $REPLY =~ ^[Nn]$ ]]; then
     echo -e "${YELLOW}>>>>> Skipping Prettier config${NC}"
     skip_prettier_setup="true"
@@ -112,13 +124,13 @@ echo "See https://github.com/prettier/eslint-config-prettier for more details."
 echo
 $pkg_cmd -D eslint-config-prettier eslint-plugin-prettier
 
-
 if [ "$skip_eslint_setup" == "true" ]; then
-  break
+  echo
+  echo "Using existing ESLint config file"
 else
   echo
   echo -e "4/5 ${YELLOW}Building your .eslintrc${config_extension} file...${NC}"
-  > ".eslintrc${config_extension}" # truncates existing file (or creates empty)
+  true >".eslintrc${config_extension}" # truncates existing file (or creates empty)
 
   echo ${config_opening}'
   "extends": [
@@ -153,21 +165,21 @@ else
       }
     ]
   }
-}' >> .eslintrc${config_extension}
+}' >>.eslintrc${config_extension}
 fi
 
-
 if [ "$skip_prettier_setup" == "true" ]; then
-  break
+  echo 
+  echo "Using existing Prettier config file"
 else
   echo -e "5/5 ${YELLOW}Building your .prettierrc${config_extension} file... ${NC}"
-  > .prettierrc${config_extension} # truncates existing file (or creates empty)
+  true >.prettierrc${config_extension} # truncates existing file (or creates empty)
 
   echo ${config_opening}'
   "printWidth": '${max_len_val}',
   "singleQuote": true,
   "trailingComma": "'${trailing_comma_pref}'"
-}' >> .prettierrc${config_extension}
+}' >>.prettierrc${config_extension}
 fi
 
 echo
