@@ -9,7 +9,7 @@
 2. Run this command inside your app's root directory. Note: this command executes the `eslint-prettier-config.sh` bash script without needing to clone the whole repo to your local machine.
 
    ```bash
-   exec 3<&1;bash <&3 <(curl https://raw.githubusercontent.com/paulolramos/eslint-prettier-airbnb-react/master/eslint-prettier-config.sh 2> /dev/null)
+   exec 3<&1;bash <&3 <(curl https://raw.githubusercontent.com/Hfreitas/eslint-prettier-airbnb-react/personal-use/eslint-prettier-config.sh 2> /dev/null)
    ```
 
 3. Make selections for your preference of package manager (npm or yarn), file format (.js or .json), max-line size, and trailing commas (none, es5, all).
@@ -22,8 +22,7 @@
 
 ### Main Packages
 
-1. [ESlint](https://eslint.org/)
-2. [Prettier](https://prettier.io/)
+1. [Prettier](https://prettier.io/)
 
 ### Airbnb Configuration
 
@@ -103,4 +102,12 @@ Once files are created, you may edit to your liking.
 
 ---
 
+This is a version of original script for personal use. If the original version isn't yet compatible with create-react-app,you're welcome to use my little modification.
+
+Please, visit the original [repo](https://github.com/paulolramos/eslint-prettier-airbnb-react) and thank the author.
+
 This script was inspired by Jeffrey Zhen's [tutorial](https://blog.echobind.com/integrating-prettier-eslint-airbnb-style-guide-in-vscode-47f07b5d7d6a).
+
+P.S.: This is an adjustment for restore compability with create-react-app.
+
+It will be used the ESLint package included in create-react-app boilerplate.
